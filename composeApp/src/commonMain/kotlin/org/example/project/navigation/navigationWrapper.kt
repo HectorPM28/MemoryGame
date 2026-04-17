@@ -8,11 +8,11 @@ import org.example.project.screens.DifficultyScreen
 import org.example.project.screens.GameScreen
 import org.example.project.screens.MenuScreen
 import org.example.project.screens.ResultsScreen
-import org.example.project.viewModels.memoryViewModel
+import org.example.project.viewModels.MemoryViewModel
 
 @Composable
 fun NavigationWrapper(){
-    val viewModel = memoryViewModel()
+    val viewModel = MemoryViewModel()
     val backStack = rememberNavBackStack(navConfig, Route.MenuScreen)
     NavDisplay(
         backStack = backStack,

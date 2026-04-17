@@ -17,11 +17,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import memorygame.composeapp.generated.resources.KirbyCruz
 import memorygame.composeapp.generated.resources.Res
-import org.example.project.viewModels.memoryViewModel
+import org.example.project.viewModels.MemoryViewModel
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun MenuScreen(navigateToDifficulty: () -> Unit, memoryViewModel: memoryViewModel) {
+fun MenuScreen(navigateToDifficulty: () -> Unit, memoryViewModel: MemoryViewModel) {
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center) {
         Text("Memory Game", style = MaterialTheme.typography.headlineMedium)

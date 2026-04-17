@@ -20,25 +20,27 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import memorygame.composeapp.generated.resources.Res
 import memorygame.composeapp.generated.resources.SignoInterrogacion
-import org.example.project.viewModels.memoryViewModel
-import org.jetbrains.compose.resources.DrawableResource
+import org.example.project.model.MemoryCard
+import org.example.project.viewModels.MemoryViewModel
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun Card(image: DrawableResource, memoryViewModel: memoryViewModel) {
-    var click by remember { mutableStateOf(false) }
+
+fun Card(card: MemoryCard, memoryViewModel: MemoryViewModel) {
     Card(
         modifier = Modifier
             .padding(4.dp)
             .fillMaxWidth()
             .aspectRatio(1.1f)
-            .clickable(onClick = {click = true; click = memoryViewModel.checkImages(image)})
+            .clickable(onClick = {if(!card.isRevealed){
+                memoryViewModel.checkImages(card)
+            } })
     ) {
         Box(modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center) {
-            if(click) {
+            if(card.isRevealed) {
                 Image(
-                    painter = painterResource(resource = image),
+                    painter = painterResource(resource = card.image),
                     contentDescription = "Kirby",
                     modifier = Modifier.clip(RoundedCornerShape(25f))
                 )

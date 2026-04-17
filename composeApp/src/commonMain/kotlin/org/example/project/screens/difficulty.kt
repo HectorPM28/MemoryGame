@@ -12,10 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.example.project.viewModels.memoryViewModel
+import org.example.project.viewModels.MemoryViewModel
 
 @Composable
-fun DifficultyScreen(navigateToGame: () -> Unit, memoryViewModel: memoryViewModel) {
+fun DifficultyScreen(navigateToGame: () -> Unit, memoryViewModel: MemoryViewModel) {
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
