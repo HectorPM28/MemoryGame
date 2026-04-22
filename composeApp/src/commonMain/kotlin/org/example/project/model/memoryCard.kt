@@ -1,9 +1,14 @@
 package org.example.project.model
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import org.jetbrains.compose.resources.DrawableResource
 
-data class MemoryCard(
+class MemoryCard(
     val id: Int,
     val image: DrawableResource,
-    var isRevealed: Boolean = false
-)
+    initialIsRevealed: Boolean = false
+) {
+    var isRevealed by mutableStateOf(initialIsRevealed)
+}

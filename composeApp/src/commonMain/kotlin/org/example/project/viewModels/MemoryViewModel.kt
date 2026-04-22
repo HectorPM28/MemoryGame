@@ -1,22 +1,15 @@
 package org.example.project.viewModels
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import memorygame.composeapp.generated.resources.KirbyCruz
-import memorygame.composeapp.generated.resources.KirbyCulo
-import memorygame.composeapp.generated.resources.KirbyEmputado
-import memorygame.composeapp.generated.resources.KirbyEstrenyido
-import memorygame.composeapp.generated.resources.KirbyGritando
-import memorygame.composeapp.generated.resources.KirbyObservador
-import memorygame.composeapp.generated.resources.KirbyPistola
-import memorygame.composeapp.generated.resources.KirbyVaquero
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import memorygame.composeapp.generated.resources.*
 import memorygame.composeapp.generated.resources.Res
 import org.example.project.model.MemoryCard
 import org.jetbrains.compose.resources.DrawableResource
 
-
-class MemoryViewModel(){
+class MemoryViewModel(): ViewModel(){
     var dificulty: String = "Easy"
 
     val allImages = listOf(
@@ -29,7 +22,7 @@ class MemoryViewModel(){
         Res.drawable.KirbyObservador,
         Res.drawable.KirbyPistola
     )
-    fun getListForGame(): List<MemoryCard>{
+    fun getListForGame(): MutableList<MemoryCard>{
         return when (dificulty){
             "Easy" -> createList(3)
             "Medium" -> createList(5)
@@ -37,7 +30,7 @@ class MemoryViewModel(){
             else -> createList(3)
         }
     }
-    fun createList(num: Int): List<MemoryCard>{
+    fun createList(num: Int): MutableList<MemoryCard>{
         val newList = mutableListOf<MemoryCard>()
         var id = 0
         for(i in 0..num){
@@ -48,33 +41,35 @@ class MemoryViewModel(){
         newList.shuffle()
         return newList
     }
-
+    var cardsForGame = mutableListOf<MemoryCard>()
+    fun prepareGame() : MutableList<MemoryCard>{
+        cardsForGame = getListForGame()
+        return cardsForGame
+    }
+    fun changeCardState(lista: MutableList<MemoryCard>, card: MemoryCard): Boolean{
+        lista.forEach { memorycard ->
+            if (memorycard.id == card.id){
+                memorycard.isRevealed = !memorycard.isRevealed
+                return memorycard.isRevealed
+            }
+        }
+        return true
+    }
     var firstCard: MemoryCard? = null
-    var indexOfFirstCard: Int = 0
-    fun checkImages(card: MemoryCard) {
-        val currentIndex = cardsForGame.indexOfFirst { it.id == card.id }
-        val newList = cardsForGame.toMutableList()
-        newList[currentIndex] = newList[currentIndex].copy(isRevealed = true)
-
-        if (firstCard == null) {
-            cardsForGame = newList
-            firstCard = newList[currentIndex]
-            indexOfFirstCard = currentIndex
-        } else {
-            if (firstCard?.image == card.image) {
-                cardsForGame = newList
-                firstCard = null
-            } else {
-                newList[indexOfFirstCard] = newList[indexOfFirstCard].copy(isRevealed = false)
-                newList[currentIndex] = newList[currentIndex].copy(isRevealed = false)
-                cardsForGame = newList
+    fun checkCorrectcard(card: MemoryCard, lista: MutableList<MemoryCard>){
+        if(firstCard == null){
+            firstCard = card
+        }else{
+            if(card.image != firstCard!!.image){
+                viewModelScope.launch {
+                    delay(1000)
+                    changeCardState(lista, card)
+                    changeCardState(lista, firstCard!!)
+                    firstCard = null
+                }
+            }else{
                 firstCard = null
             }
         }
-    }
-    var cardsForGame by mutableStateOf(listOf<MemoryCard>())
-
-    fun prepareGame() {
-        cardsForGame = getListForGame()
     }
 }

@@ -18,6 +18,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import org.example.project.model.MemoryCard
 import org.example.project.view.Card
 import org.example.project.viewModels.MemoryViewModel
 
@@ -25,10 +26,7 @@ import org.example.project.viewModels.MemoryViewModel
 
 fun GameScreen(navigateToResults: () -> Unit, memoryViewModel: MemoryViewModel) {
     val dificulty = memoryViewModel.dificulty
-
-    LaunchedEffect(Unit) {
-        memoryViewModel.prepareGame()
-    }
+    val lista : MutableList<MemoryCard> = memoryViewModel.prepareGame()
 
     Column(
         modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally,
@@ -39,8 +37,8 @@ fun GameScreen(navigateToResults: () -> Unit, memoryViewModel: MemoryViewModel) 
             columns = GridCells.Fixed(4),
             modifier = Modifier.fillMaxWidth().padding(4.dp)
         ) {
-            items(memoryViewModel.cardsForGame, key = { it.id }) { imagen ->
-                Card(imagen, memoryViewModel)
+            items(lista, key = { it.id }) { imagen ->
+                Card(imagen, memoryViewModel, lista)
             }
         }
         Spacer(Modifier.height(24.dp))

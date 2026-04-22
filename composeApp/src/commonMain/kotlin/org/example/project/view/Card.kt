@@ -26,14 +26,15 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 
-fun Card(card: MemoryCard, memoryViewModel: MemoryViewModel) {
+fun Card(card: MemoryCard, memoryViewModel: MemoryViewModel, list: MutableList<MemoryCard>) {
     Card(
         modifier = Modifier
             .padding(4.dp)
             .fillMaxWidth()
             .aspectRatio(1.1f)
             .clickable(onClick = {if(!card.isRevealed){
-                memoryViewModel.checkImages(card)
+                memoryViewModel.changeCardState(list, card)
+                memoryViewModel.checkCorrectcard(card, list)
             } })
     ) {
         Box(modifier = Modifier.fillMaxSize(),

@@ -57,6 +57,8 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.jetbrains.navigation3.ui)
             implementation(libs.kotlinx.serialization.core)
+            implementation("androidx.lifecycle:lifecycle-viewmodel:2.8.0")
+            implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.0")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
