@@ -1,5 +1,8 @@
 package org.example.project.viewModels
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
@@ -10,9 +13,9 @@ import org.example.project.model.MemoryCard
 import org.jetbrains.compose.resources.DrawableResource
 
 class MemoryViewModel(): ViewModel(){
-    var dificulty: String = "Easy"
+    var difficulty: String = "Easy"
 
-    val allImages = listOf(
+    val kirboImages = listOf(
         Res.drawable.KirbyCruz,
         Res.drawable.KirbyVaquero,
         Res.drawable.KirbyEstrenyido,
@@ -22,19 +25,37 @@ class MemoryViewModel(): ViewModel(){
         Res.drawable.KirbyObservador,
         Res.drawable.KirbyPistola
     )
+    val pokeImages = listOf(
+        Res.drawable.browt,
+        Res.drawable.charizard,
+        Res.drawable.eevee,
+        Res.drawable.gibble,
+        Res.drawable.mrMime,
+        Res.drawable.patas,
+        Res.drawable.quaxly,
+        Res.drawable.spheal
+    )
     fun getListForGame(): MutableList<MemoryCard>{
-        return when (dificulty){
+        return when (difficulty){
             "Easy" -> createList(3)
             "Medium" -> createList(5)
             "Hard" -> createList(7)
             else -> createList(3)
         }
     }
+    fun getImgForGame(): List<DrawableResource>{
+        return when (selectedText){
+            "Kirbo" -> kirboImages
+            "CursedPokemon" -> pokeImages
+            else -> kirboImages
+        }
+    }
     fun createList(num: Int): MutableList<MemoryCard>{
         val newList = mutableListOf<MemoryCard>()
         var id = 0
+        val listImg = getImgForGame()
         for(i in 0..num){
-            val img = allImages[i]
+            val img = listImg[i]
             newList.add(MemoryCard(id++, img))
             newList.add(MemoryCard(id++, img))
         }
@@ -72,4 +93,8 @@ class MemoryViewModel(): ViewModel(){
             }
         }
     }
+
+    var selectedText by mutableStateOf("Kirbo")
+    var expanded by mutableStateOf(false)
+    val possibleImages = listOf("Kirbo", "CursedPokemon" )
 }

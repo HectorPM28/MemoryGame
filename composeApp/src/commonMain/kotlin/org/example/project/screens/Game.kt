@@ -14,7 +14,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -25,14 +24,14 @@ import org.example.project.viewModels.MemoryViewModel
 @Composable
 
 fun GameScreen(navigateToResults: () -> Unit, memoryViewModel: MemoryViewModel) {
-    val dificulty = memoryViewModel.dificulty
+    val difficulty = memoryViewModel.difficulty
     val lista : MutableList<MemoryCard> = memoryViewModel.prepareGame()
 
     Column(
         modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text("Juego $dificulty", style = MaterialTheme.typography.headlineMedium)
+        Text("Juego $difficulty", style = MaterialTheme.typography.headlineMedium)
         LazyVerticalGrid(
             columns = GridCells.Fixed(4),
             modifier = Modifier.fillMaxWidth().padding(4.dp)
