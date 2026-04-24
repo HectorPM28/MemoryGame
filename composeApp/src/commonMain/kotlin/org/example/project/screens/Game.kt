@@ -14,6 +14,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -25,7 +26,7 @@ import org.example.project.viewModels.MemoryViewModel
 
 fun GameScreen(navigateToResults: () -> Unit, memoryViewModel: MemoryViewModel) {
     val difficulty = memoryViewModel.difficulty
-    val lista : MutableList<MemoryCard> = memoryViewModel.prepareGame()
+    val lista = remember { memoryViewModel.prepareGame() }
 
     Column(
         modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally,
@@ -37,10 +38,9 @@ fun GameScreen(navigateToResults: () -> Unit, memoryViewModel: MemoryViewModel) 
             modifier = Modifier.fillMaxWidth().padding(4.dp)
         ) {
             items(lista, key = { it.id }) { imagen ->
-                Card(imagen, memoryViewModel, lista)
+                Card(imagen, memoryViewModel, lista, navigateToResults)
             }
         }
         Spacer(Modifier.height(24.dp))
-        Button(onClick = navigateToResults) { Text("Results"); memoryViewModel.cardsForGame.forEach { card -> card.isRevealed = false } }
     }
 }

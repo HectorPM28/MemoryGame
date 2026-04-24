@@ -8,7 +8,9 @@ sealed class Route: NavKey {
     @Serializable
     data object GameScreen : Route()
     @Serializable
-    data object ResultsScreen : Route()
+    data object RankingScreen : Route()
     @Serializable
     data object DifficultyScreen : Route()
+    @Serializable
+    data object ResultsScreen : Route()
 }

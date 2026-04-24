@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import memorygame.composeapp.generated.resources.*
 import memorygame.composeapp.generated.resources.Res
 import org.example.project.model.MemoryCard
+import org.example.project.model.Player
 import org.jetbrains.compose.resources.DrawableResource
 
 class MemoryViewModel(): ViewModel(){
@@ -35,24 +36,28 @@ class MemoryViewModel(): ViewModel(){
         Res.drawable.quaxly,
         Res.drawable.spheal
     )
+    var cardsForGame = mutableListOf<MemoryCard>()
+    private var _firstCard: MemoryCard? = null
     fun getListForGame(): MutableList<MemoryCard>{
-        return when (difficulty){
-            "Easy" -> createList(3)
-            "Medium" -> createList(5)
-            "Hard" -> createList(7)
-            else -> createList(3)
+         when (difficulty){
+            "Easy" -> {
+                points = 15
+                return createList(3)
+            }
+            "Medium" -> {
+                points = 25
+                return createList(5)
+            }
+            "Hard" -> {
+                points = 50
+                return createList(7)
+            }
         }
+        return createList(0)
     }
-    fun getImgForGame(): List<DrawableResource>{
-        return when (selectedText){
-            "Kirbo" -> kirboImages
-            "CursedPokemon" -> pokeImages
-            else -> kirboImages
-        }
-    }
+    var id = 0
     fun createList(num: Int): MutableList<MemoryCard>{
         val newList = mutableListOf<MemoryCard>()
-        var id = 0
         val listImg = getImgForGame()
         for(i in 0..num){
             val img = listImg[i]
@@ -62,39 +67,78 @@ class MemoryViewModel(): ViewModel(){
         newList.shuffle()
         return newList
     }
-    var cardsForGame = mutableListOf<MemoryCard>()
     fun prepareGame() : MutableList<MemoryCard>{
         cardsForGame = getListForGame()
         return cardsForGame
     }
-    fun changeCardState(lista: MutableList<MemoryCard>, card: MemoryCard): Boolean{
+    fun changeCardState(lista: MutableList<MemoryCard>, card: MemoryCard){
         lista.forEach { memorycard ->
-            if (memorycard.id == card.id){
-                memorycard.isRevealed = !memorycard.isRevealed
-                return memorycard.isRevealed
-            }
+            if (memorycard.id == card.id) memorycard.isRevealed = !memorycard.isRevealed
         }
-        return true
     }
-    var firstCard: MemoryCard? = null
     fun checkCorrectcard(card: MemoryCard, lista: MutableList<MemoryCard>){
-        if(firstCard == null){
-            firstCard = card
+        if(_firstCard == null){
+            _firstCard = card
         }else{
-            if(card.image != firstCard!!.image){
+            if(card.image != _firstCard!!.image){
                 viewModelScope.launch {
                     delay(1000)
                     changeCardState(lista, card)
-                    changeCardState(lista, firstCard!!)
-                    firstCard = null
+                    changeCardState(lista, _firstCard!!)
+                    _firstCard = null
+                    errors++
                 }
             }else{
-                firstCard = null
+                _firstCard = null
+                pairs++
             }
         }
     }
+    fun resetList(){
+        cardsForGame.clear()
+        errors = 0
+        pairs = 0
+    }
 
+    //Selecting Images
     var selectedText by mutableStateOf("Kirbo")
     var expanded by mutableStateOf(false)
     val possibleImages = listOf("Kirbo", "CursedPokemon" )
+
+    fun getImgForGame(): List<DrawableResource>{
+        return when (selectedText){
+            "Kirbo" -> kirboImages
+            "CursedPokemon" -> pokeImages
+            else -> kirboImages
+        }
+    }
+
+    //Stats Game
+    var errors = 0
+    var players = mutableListOf<Player>()
+    var points = 15
+    var playerName = "Juan"
+    var pairs = 0
+
+    fun checkEndOfRound(): Boolean{
+        when (difficulty){
+            "Easy" -> if(pairs > 3){
+                getResultsOfRound()
+                return true
+            }
+            "Medium" -> if(pairs > 5){
+                getResultsOfRound()
+                return true
+            }
+            "Hard" -> if(pairs > 7){
+                getResultsOfRound()
+                return true
+            }
+        }
+        return false
+    }
+    var idPlayer = 1
+    fun getResultsOfRound(){
+        players.add(Player(idPlayer++, playerName, errors, points - errors))
+    }
 }

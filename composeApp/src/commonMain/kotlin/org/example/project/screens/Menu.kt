@@ -21,7 +21,7 @@ import org.example.project.viewModels.MemoryViewModel
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun MenuScreen(navigateToDifficulty: () -> Unit, memoryViewModel: MemoryViewModel) {
+fun MenuScreen(navigateToDifficulty: () -> Unit, navigateToRanking: () -> Unit, memoryViewModel: MemoryViewModel) {
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center) {
         Text("Memory Game", style = MaterialTheme.typography.headlineMedium)
@@ -32,7 +32,10 @@ fun MenuScreen(navigateToDifficulty: () -> Unit, memoryViewModel: MemoryViewMode
             modifier = Modifier.clip(RoundedCornerShape(25f))
         )
 
-        Button(onClick = navigateToDifficulty) { Text("Ir a Dificultades") }
+        Button(onClick = {navigateToDifficulty(); memoryViewModel.resetList()})
+        { Text("Ir a Dificultades") }
         Spacer(Modifier.height(8.dp))
+        Button(onClick = {navigateToRanking()}) { Text("Ranking") }
+
     }
 }

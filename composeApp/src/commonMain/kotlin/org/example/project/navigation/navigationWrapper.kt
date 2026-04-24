@@ -7,6 +7,7 @@ import androidx.navigation3.ui.NavDisplay
 import org.example.project.screens.DifficultyScreen
 import org.example.project.screens.GameScreen
 import org.example.project.screens.MenuScreen
+import org.example.project.screens.RankingScreen
 import org.example.project.screens.ResultsScreen
 import org.example.project.viewModels.MemoryViewModel
 
@@ -21,6 +22,7 @@ fun NavigationWrapper(){
             entry<Route.MenuScreen> {
                 MenuScreen(
                     navigateToDifficulty = { backStack.add(Route.DifficultyScreen) },
+                    navigateToRanking = { backStack.add(Route.RankingScreen) },
                     memoryViewModel = viewModel
                 )
             }
@@ -35,6 +37,9 @@ fun NavigationWrapper(){
             }
             entry<Route.ResultsScreen> {
                 ResultsScreen(navigateToMenu = { backStack.add(Route.MenuScreen) }, viewModel)
+            }
+            entry<Route.RankingScreen> {
+                RankingScreen(navigateToMenu = { backStack.add(Route.MenuScreen) }, viewModel)
             }
         }
     )

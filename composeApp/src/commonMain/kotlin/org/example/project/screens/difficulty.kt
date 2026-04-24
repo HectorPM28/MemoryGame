@@ -47,6 +47,7 @@ fun DifficultyScreen(navigateToGame: () -> Unit, memoryViewModel: MemoryViewMode
             )
             { Text("Hard") }
         }
+        Button(onClick = navigateToGame) { Text("Start game") }
         Spacer(Modifier.height(24.dp))
 
         OutlinedTextField(
@@ -75,5 +76,4 @@ fun DifficultyScreen(navigateToGame: () -> Unit, memoryViewModel: MemoryViewMode
                         memoryViewModel.selectedText = img
                     })
             }}}
-        Button(onClick = navigateToGame) { Text("Start game") }
     }

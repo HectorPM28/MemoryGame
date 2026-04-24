@@ -10,8 +10,9 @@ val navConfig = SavedStateConfiguration {
         polymorphic(NavKey::class) {
             subclass(Route.MenuScreen::class, Route.MenuScreen.serializer())
             subclass(Route.GameScreen::class, Route.GameScreen.serializer())
-            subclass(Route.ResultsScreen::class, Route.ResultsScreen.serializer())
+            subclass(Route.RankingScreen::class, Route.RankingScreen.serializer())
             subclass(Route.DifficultyScreen::class, Route.DifficultyScreen.serializer())
+            subclass(Route.ResultsScreen::class, Route.ResultsScreen.serializer())
         }
     }
 }

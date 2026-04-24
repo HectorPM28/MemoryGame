@@ -26,7 +26,7 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 
-fun Card(card: MemoryCard, memoryViewModel: MemoryViewModel, list: MutableList<MemoryCard>) {
+fun Card(card: MemoryCard, memoryViewModel: MemoryViewModel, list: MutableList<MemoryCard>, navigateToResults: () -> Unit) {
     Card(
         modifier = Modifier
             .padding(4.dp)
@@ -35,6 +35,10 @@ fun Card(card: MemoryCard, memoryViewModel: MemoryViewModel, list: MutableList<M
             .clickable(onClick = {if(!card.isRevealed){
                 memoryViewModel.changeCardState(list, card)
                 memoryViewModel.checkCorrectcard(card, list)
+
+                if(memoryViewModel.checkEndOfRound()){
+                    navigateToResults()
+                }
             } })
     ) {
         Box(modifier = Modifier.fillMaxSize(),
