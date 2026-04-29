@@ -14,7 +14,11 @@ import org.example.project.viewModels.MemoryViewModel
 fun ResultsScreen(navigateToMenu: () -> Unit, memoryViewModel: MemoryViewModel) {
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center) {
-        Button(onClick = navigateToMenu) {
+        Text("Player: ${memoryViewModel.user}")
+        Text("Difficulty Choosen: ${memoryViewModel.difficulty}")
+        Text("Points: ${memoryViewModel.points}")
+        Text("Errors: ${memoryViewModel.errors}")
+        Button(onClick = {navigateToMenu()}) {
             Text("Menu")
         }
     }

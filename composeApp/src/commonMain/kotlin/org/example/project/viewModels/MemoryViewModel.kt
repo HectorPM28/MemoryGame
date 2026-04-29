@@ -36,6 +36,16 @@ class MemoryViewModel(): ViewModel(){
         Res.drawable.quaxly,
         Res.drawable.spheal
     )
+    val miiImages = listOf(
+        Res.drawable.Hector,
+        Res.drawable.Maria,
+        Res.drawable.Camila,
+        Res.drawable.Yoon,
+        Res.drawable.Loki,
+        Res.drawable.Gumi,
+        Res.drawable.Miku,
+        Res.drawable.Art
+    )
     var cardsForGame = mutableListOf<MemoryCard>()
     private var _firstCard: MemoryCard? = null
     fun getListForGame(): MutableList<MemoryCard>{
@@ -103,21 +113,22 @@ class MemoryViewModel(): ViewModel(){
     //Selecting Images
     var selectedText by mutableStateOf("Kirbo")
     var expanded by mutableStateOf(false)
-    val possibleImages = listOf("Kirbo", "CursedPokemon" )
+    val possibleImages = listOf("Kirbo", "CursedPokemon", "Mii" )
 
     fun getImgForGame(): List<DrawableResource>{
         return when (selectedText){
             "Kirbo" -> kirboImages
             "CursedPokemon" -> pokeImages
+            "Mii" -> miiImages
             else -> kirboImages
         }
     }
 
     //Stats Game
+    var user by mutableStateOf("")
     var errors = 0
     var players = mutableListOf<Player>()
     var points = 15
-    var playerName = "Juan"
     var pairs = 0
 
     fun checkEndOfRound(): Boolean{
@@ -139,6 +150,6 @@ class MemoryViewModel(): ViewModel(){
     }
     var idPlayer = 1
     fun getResultsOfRound(){
-        players.add(Player(idPlayer++, playerName, errors, points - errors))
+        players.add(Player(idPlayer++, user, errors, points - errors))
     }
 }

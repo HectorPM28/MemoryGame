@@ -27,22 +27,26 @@ import org.example.project.viewModels.MemoryViewModel
 @Composable
 fun DifficultyScreen(navigateToGame: () -> Unit, memoryViewModel: MemoryViewModel) {
 
-    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally,
+    Column(
+        modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     )
     {
         Text("Selecciona una dificultad", style = MaterialTheme.typography.headlineMedium)
         Spacer(Modifier.height(24.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            Button(onClick = { memoryViewModel.difficulty = "Easy" },
+            Button(
+                onClick = { memoryViewModel.difficulty = "Easy" },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Green)
             )
             { Text("Easy") }
-            Button(onClick = { memoryViewModel.difficulty = "Medium" },
+            Button(
+                onClick = { memoryViewModel.difficulty = "Medium" },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Yellow)
             )
             { Text("Medium") }
-            Button(onClick = { memoryViewModel.difficulty = "Hard" },
+            Button(
+                onClick = { memoryViewModel.difficulty = "Hard" },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
             )
             { Text("Hard") }
@@ -50,30 +54,6 @@ fun DifficultyScreen(navigateToGame: () -> Unit, memoryViewModel: MemoryViewMode
         Button(onClick = navigateToGame) { Text("Start game") }
         Spacer(Modifier.height(24.dp))
 
-        OutlinedTextField(
-            value = memoryViewModel.selectedText,
-            onValueChange = { memoryViewModel.selectedText = it },
-            enabled = false,
-            readOnly = true,
-            modifier = Modifier
-                .clickable { memoryViewModel.expanded = true }
-                .fillMaxWidth()
-        )
 
-
-        DropdownMenu(
-            expanded = memoryViewModel.expanded,
-            onDismissRequest = { memoryViewModel.expanded = false },
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(1.dp, Color.Black, RoundedCornerShape(4.dp))
-        ) {
-            memoryViewModel.possibleImages.forEach { img ->
-                DropdownMenuItem(
-                    text = { Text(text = img) },
-                    onClick = {
-                        memoryViewModel.expanded = false
-                        memoryViewModel.selectedText = img
-                    })
-            }}}
     }
+}

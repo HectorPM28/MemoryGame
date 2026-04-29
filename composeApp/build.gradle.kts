@@ -8,7 +8,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
-    alias(libs.plugins.kotlinSerialization)
+    kotlin("plugin.serialization") version "1.9.0"
 }
 
 kotlin {
@@ -45,6 +45,7 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.activity.compose)
+            implementation("io.ktor:ktor-client-okhttp:2.3.8")
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
@@ -59,6 +60,20 @@ kotlin {
             implementation(libs.kotlinx.serialization.core)
             implementation("androidx.lifecycle:lifecycle-viewmodel:2.8.0")
             implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.0")
+            // Supabase per a Bases de Dades (PostgREST)
+            val supabaseVersion = "3.0.1"
+            implementation("io.github.jan-tennert.supabase:postgrest-kt:$supabaseVersion")
+            implementation("io.github.jan-tennert.supabase:storage-kt:$supabaseVersion")
+
+            // KTOR CORE
+            val ktorVersion = "2.3.8"
+            implementation("io.ktor:ktor-client-core:$ktorVersion")
+            implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+            implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+
+            //COIL
+            implementation("io.coil-kt.coil3:coil-compose:3.0.0-alpha06")
+            implementation("io.coil-kt.coil3:coil-network-ktor:3.0.0-alpha06")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -66,6 +81,19 @@ kotlin {
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
+            implementation("io.ktor:ktor-client-cio:2.3.8")
+        }
+        val jsMain by getting {
+            dependencies {
+                implementation("io.ktor:ktor-client-js:2.3.8")
+            }
+        }
+        val iosMain by creating {
+            dependsOn(commonMain.get())
+            dependencies {
+                // Motor Darwin para iOS/macOS
+                implementation("io.ktor:ktor-client-darwin:2.3.8")
+            }
         }
     }
 }

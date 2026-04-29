@@ -34,7 +34,7 @@ fun RankingScreen(navigateToMenu: () -> Unit, memoryViewModel: MemoryViewModel) 
             horizontalArrangement = Arrangement.Center
         ) {
             items(memoryViewModel.players, key = { it.id!! }) { player ->
-                Text("${player.name}, ${player.points}, ${player.errors}", textAlign = TextAlign.Center)
+                Text("${player.name} - ${player.points} - ${player.errors}", textAlign = TextAlign.Center)
             }
         }
         Button(onClick = navigateToMenu) { Text("Volver") }
