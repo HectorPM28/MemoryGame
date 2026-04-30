@@ -13,14 +13,18 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.example.project.model.Player
 import org.example.project.viewModels.MemoryViewModel
 
 @Composable
 fun RankingScreen(navigateToMenu: () -> Unit, memoryViewModel: MemoryViewModel) {
+    val llistPlayers by memoryViewModel.player.collectAsStateWithLifecycle(initialValue = emptyList<Player>())
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -33,7 +37,7 @@ fun RankingScreen(navigateToMenu: () -> Unit, memoryViewModel: MemoryViewModel) 
                 .weight(1f, fill = false),
             horizontalArrangement = Arrangement.Center
         ) {
-            items(memoryViewModel.players, key = { it.id!! }) { player ->
+            items(llistPlayers     , key = { it.id!! }) { player ->
                 Text("${player.name} - ${player.points} - ${player.errors}", textAlign = TextAlign.Center)
             }
         }

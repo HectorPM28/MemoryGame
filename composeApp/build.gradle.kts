@@ -40,13 +40,17 @@ kotlin {
         browser()
         binaries.executable()
     }
-    
+
     sourceSets {
+        val ktorVersion = "3.0.0" // Definimos la versión una sola vez para todos
+
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.activity.compose)
-            implementation("io.ktor:ktor-client-okhttp:2.3.8")
+            // CAMBIO: Antes tenías 2.3.8, DEBE ser ktorVersion (3.0.0)
+            implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
         }
+
         commonMain.dependencies {
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
@@ -58,41 +62,46 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.jetbrains.navigation3.ui)
             implementation(libs.kotlinx.serialization.core)
+
             implementation("androidx.lifecycle:lifecycle-viewmodel:2.8.0")
             implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.0")
-            // Supabase per a Bases de Dades (PostgREST)
+
+            // Supabase
             val supabaseVersion = "3.0.1"
             implementation("io.github.jan-tennert.supabase:postgrest-kt:$supabaseVersion")
             implementation("io.github.jan-tennert.supabase:storage-kt:$supabaseVersion")
 
-            // KTOR CORE
-            val ktorVersion = "2.3.8"
+            // KTOR CORE y PLUGINS (Todos en 3.0.0)
             implementation("io.ktor:ktor-client-core:$ktorVersion")
             implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
             implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+            implementation("io.ktor:ktor-client-logging:$ktorVersion")
+            implementation("io.ktor:ktor-client-auth:$ktorVersion")
 
-            //COIL
+            // COIL
             implementation("io.coil-kt.coil3:coil-compose:3.0.0-alpha06")
             implementation("io.coil-kt.coil3:coil-network-ktor:3.0.0-alpha06")
         }
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-        }
+
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
-            implementation("io.ktor:ktor-client-cio:2.3.8")
+            // CAMBIO: Antes 2.3.8 -> Ahora ktorVersion
+            implementation("io.ktor:ktor-client-cio:$ktorVersion")
         }
+
         val jsMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-js:2.3.8")
+                // CAMBIO: Antes 2.3.8 -> Ahora ktorVersion
+                implementation("io.ktor:ktor-client-js:$ktorVersion")
             }
         }
+
         val iosMain by creating {
             dependsOn(commonMain.get())
             dependencies {
-                // Motor Darwin para iOS/macOS
-                implementation("io.ktor:ktor-client-darwin:2.3.8")
+                // CAMBIO: Antes 2.3.8 -> Ahora ktorVersion
+                implementation("io.ktor:ktor-client-darwin:$ktorVersion")
             }
         }
     }

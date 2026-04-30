@@ -74,7 +74,7 @@ fun MenuScreen(navigateToDifficulty: () -> Unit, navigateToRanking: () -> Unit, 
                 navigateToDifficulty()
             }; memoryViewModel.resetList()
         })
-        { Text("Ir a Dificultades") }
+        { Text("Play") }
         Spacer(Modifier.height(8.dp))
         Button(onClick = {navigateToRanking()}) { Text("Ranking") }
 

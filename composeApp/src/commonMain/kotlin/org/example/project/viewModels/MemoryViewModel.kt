@@ -6,11 +6,14 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import memorygame.composeapp.generated.resources.*
 import memorygame.composeapp.generated.resources.Res
 import org.example.project.model.MemoryCard
 import org.example.project.model.Player
+import org.example.project.repository.PlayerRepository
 import org.jetbrains.compose.resources.DrawableResource
 
 class MemoryViewModel(): ViewModel(){
@@ -92,7 +95,7 @@ class MemoryViewModel(): ViewModel(){
         }else{
             if(card.image != _firstCard!!.image){
                 viewModelScope.launch {
-                    delay(1000)
+                    delay(500)
                     changeCardState(lista, card)
                     changeCardState(lista, _firstCard!!)
                     _firstCard = null
@@ -126,9 +129,8 @@ class MemoryViewModel(): ViewModel(){
 
     //Stats Game
     var user by mutableStateOf("")
-    var errors = 0
-    var players = mutableListOf<Player>()
-    var points = 15
+    var errors : Long = 0
+    var points : Long = 15
     var pairs = 0
 
     fun checkEndOfRound(): Boolean{
@@ -150,6 +152,50 @@ class MemoryViewModel(): ViewModel(){
     }
     var idPlayer = 1
     fun getResultsOfRound(){
-        players.add(Player(idPlayer++, user, errors, points - errors))
+        afegirPlayer(user, errors, points-errors)
+    }
+
+    //Repositori
+    private val repository = PlayerRepository()
+
+    private val _players = MutableStateFlow<List<Player>>(emptyList())
+    val player: StateFlow<List<Player>> = _players
+
+    init {
+        carregarPlayers()
+    }
+
+    private fun carregarPlayers() {
+        viewModelScope.launch {
+            try {
+                _players.value = repository.obtenirPlayers()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun afegirPlayer(name: String, errors: Long, points: Long) {
+        viewModelScope.launch {
+            repository.afegirPlayer(name, errors, points)
+            carregarPlayers()
+        }
+    }
+    fun canviarEstatPlayer(marker: Player?, newName: String, newDescrp: String) {
+        viewModelScope.launch {
+            marker?.id?.let { id ->
+                repository.actualitzarMarker(marker.id, newName)
+                carregarPlayers()
+            }
+        }
+    }
+
+    fun esborrarPlayer(marker: Player) {
+        viewModelScope.launch {
+            marker.id?.let { id ->
+                repository.esborrarMarcador(id)
+                carregarPlayers()
+            }
+        }
     }
 }
