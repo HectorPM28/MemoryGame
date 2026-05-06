@@ -33,7 +33,7 @@ fun NavigationWrapper(){
                 )
             }
             entry<Route.GameScreen> {
-                GameScreen(navigateToResults = { backStack.add(Route.ResultsScreen) }, viewModel)
+                GameScreen(navigateToResults = { backStack.add(Route.ResultsScreen) }, viewModel, navigateToMenu = {backStack.add(Route.MenuScreen)})
             }
             entry<Route.ResultsScreen> {
                 ResultsScreen(navigateToMenu = { backStack.add(Route.MenuScreen) }, viewModel)

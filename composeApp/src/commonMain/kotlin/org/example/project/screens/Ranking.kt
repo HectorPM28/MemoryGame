@@ -1,5 +1,6 @@
 package org.example.project.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,26 +11,35 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.example.project.model.Player
+import org.example.project.model.PlayerRow
+import org.example.project.theme.AzulBoton
+import org.example.project.theme.AzulClaro
 import org.example.project.viewModels.MemoryViewModel
 
 @Composable
 fun RankingScreen(navigateToMenu: () -> Unit, memoryViewModel: MemoryViewModel) {
     val llistPlayers by memoryViewModel.player.collectAsStateWithLifecycle(initialValue = emptyList<Player>())
-    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally,
+    Column(modifier = Modifier.fillMaxSize().background(AzulClaro), horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text("Resultados", style = MaterialTheme.typography.headlineMedium)
-        Text("NAME POINTS ERRORS")
+        Text(
+            text = "RANKING",
+            style = MaterialTheme.typography.headlineLarge,
+            fontWeight = FontWeight.Black,
+        )
         Spacer(Modifier.height(24.dp))
         LazyVerticalGrid(
             columns = GridCells.Fixed(1),
@@ -38,10 +48,12 @@ fun RankingScreen(navigateToMenu: () -> Unit, memoryViewModel: MemoryViewModel) 
             horizontalArrangement = Arrangement.Center
         ) {
             items(llistPlayers     , key = { it.id!! }) { player ->
-                Text("${player.name} - ${player.points} - ${player.errors}", textAlign = TextAlign.Center)
+                PlayerRow(player)
             }
         }
-        Button(onClick = navigateToMenu) { Text("Volver") }
+        Spacer(Modifier.height(24.dp))
+
+        Button(onClick = navigateToMenu, colors = ButtonDefaults.buttonColors(containerColor = AzulBoton)) { Text("Volver") }
     }
 }
 

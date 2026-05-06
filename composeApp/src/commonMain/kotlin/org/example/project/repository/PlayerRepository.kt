@@ -5,7 +5,7 @@ import io.github.jan.supabase.postgrest.postgrest
 import org.example.project.model.Player
 
 class PlayerRepository {
-    private val player = SupabaseClient.client.postgrest["Players"]
+    private val player by lazy { SupabaseClient.client.postgrest["Players"] }
     suspend fun afegirPlayer(name: String, errors: Long, points: Long) {
         val nouPlayer =
             Player(name = name, errors = errors, points = points)

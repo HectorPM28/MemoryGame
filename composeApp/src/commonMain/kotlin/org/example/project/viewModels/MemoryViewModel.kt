@@ -150,13 +150,12 @@ class MemoryViewModel(): ViewModel(){
         }
         return false
     }
-    var idPlayer = 1
     fun getResultsOfRound(){
         afegirPlayer(user, errors, points-errors)
     }
 
     //Repositori
-    private val repository = PlayerRepository()
+    private val repository by lazy { PlayerRepository() }
 
     private val _players = MutableStateFlow<List<Player>>(emptyList())
     val player: StateFlow<List<Player>> = _players
@@ -181,7 +180,7 @@ class MemoryViewModel(): ViewModel(){
             carregarPlayers()
         }
     }
-    fun canviarEstatPlayer(marker: Player?, newName: String, newDescrp: String) {
+    fun canviarEstatPlayer(marker: Player?, newName: String) {
         viewModelScope.launch {
             marker?.id?.let { id ->
                 repository.actualitzarMarker(marker.id, newName)
