@@ -32,6 +32,7 @@ import org.example.project.viewModels.MemoryViewModel
 @Composable
 fun RankingScreen(navigateToMenu: () -> Unit, memoryViewModel: MemoryViewModel) {
     val llistPlayers by memoryViewModel.player.collectAsStateWithLifecycle(initialValue = emptyList<Player>())
+    val sortedList = llistPlayers.sortedByDescending { it.points }
     Column(modifier = Modifier.fillMaxSize().background(AzulClaro), horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -47,7 +48,7 @@ fun RankingScreen(navigateToMenu: () -> Unit, memoryViewModel: MemoryViewModel) 
                 .weight(1f, fill = false),
             horizontalArrangement = Arrangement.Center
         ) {
-            items(llistPlayers     , key = { it.id!! }) { player ->
+            items(sortedList     , key = { it.id!! }) { player ->
                 PlayerRow(player)
             }
         }

@@ -19,43 +19,47 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import org.example.project.theme.AzulClaro
+import org.example.project.theme.*
 import org.example.project.viewModels.MemoryViewModel
 
 @Composable
 fun DifficultyScreen(navigateToGame: () -> Unit, memoryViewModel: MemoryViewModel) {
-
     Column(
         modifier = Modifier.fillMaxSize().background(AzulClaro), horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     )
     {
-        Text("Selecciona una dificultad", style = MaterialTheme.typography.headlineMedium)
+        Text("Select a difficulty", style = MaterialTheme.typography.headlineLarge)
         Spacer(Modifier.height(24.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             Button(
                 onClick = { memoryViewModel.difficulty = "Easy" },
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Green)
+                colors = ButtonDefaults.buttonColors(containerColor = AzulCeleste),
+                modifier = Modifier.testTag("Easy")
             )
             { Text("Easy") }
             Button(
                 onClick = { memoryViewModel.difficulty = "Medium" },
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Yellow)
+                colors = ButtonDefaults.buttonColors(containerColor = AzulBoton),
+                modifier = Modifier.testTag("Medium")
             )
             { Text("Medium") }
             Button(
                 onClick = { memoryViewModel.difficulty = "Hard" },
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                colors = ButtonDefaults.buttonColors(containerColor = AzulOscuro),
+                modifier = Modifier.testTag("Hard")
             )
             { Text("Hard") }
         }
-        Button(onClick = navigateToGame) { Text("Start game") }
-        Spacer(Modifier.height(24.dp))
-
-
+        Spacer(Modifier.height(100.dp))
+        Button(onClick = navigateToGame, colors = ButtonDefaults.buttonColors(containerColor = AzulBoton)) { Text("Start game") }
     }
 }

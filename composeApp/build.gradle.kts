@@ -17,7 +17,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosArm64(),
         iosSimulatorArm64()
@@ -27,14 +27,14 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     jvm()
-    
+
     js {
         browser()
         binaries.executable()
     }
-    
+
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         browser()
@@ -42,13 +42,13 @@ kotlin {
     }
 
     sourceSets {
-        val ktorVersion = "3.0.0" // Definimos la versión una sola vez para todos
+        val ktorVersion = "3.0.0"
 
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.activity.compose)
-            // CAMBIO: Antes tenías 2.3.8, DEBE ser ktorVersion (3.0.0)
             implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
+
         }
 
         commonMain.dependencies {
@@ -63,15 +63,12 @@ kotlin {
             implementation(libs.jetbrains.navigation3.ui)
             implementation(libs.kotlinx.serialization.core)
 
-            implementation("androidx.lifecycle:lifecycle-viewmodel:2.8.0")
-            implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.0")
-
             // Supabase
             val supabaseVersion = "3.0.1"
             implementation("io.github.jan-tennert.supabase:postgrest-kt:$supabaseVersion")
             implementation("io.github.jan-tennert.supabase:storage-kt:$supabaseVersion")
 
-            // KTOR CORE y PLUGINS (Todos en 3.0.0)
+            // KTOR CORE y PLUGINS
             implementation("io.ktor:ktor-client-core:$ktorVersion")
             implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
             implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
@@ -81,18 +78,18 @@ kotlin {
             // COIL
             implementation("io.coil-kt.coil3:coil-compose:3.0.0-alpha06")
             implementation("io.coil-kt.coil3:coil-network-ktor:3.0.0-alpha06")
+
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
         }
 
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
-            // CAMBIO: Antes 2.3.8 -> Ahora ktorVersion
             implementation("io.ktor:ktor-client-cio:$ktorVersion")
         }
 
         val jsMain by getting {
             dependencies {
-                // CAMBIO: Antes 2.3.8 -> Ahora ktorVersion
                 implementation("io.ktor:ktor-client-js:$ktorVersion")
             }
         }
@@ -100,9 +97,29 @@ kotlin {
         val iosMain by creating {
             dependsOn(commonMain.get())
             dependencies {
-                // CAMBIO: Antes 2.3.8 -> Ahora ktorVersion
                 implementation("io.ktor:ktor-client-darwin:$ktorVersion")
             }
+        }
+    }
+    sourceSets.commonTest.dependencies {
+        implementation(libs.kotlin.test)
+        @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+        implementation(compose.uiTest)
+    }
+    sourceSets.androidInstrumentedTest.dependencies {
+        implementation(kotlin("test"))
+    }
+    val androidInstrumentedTest by sourceSets.getting {
+        dependencies {
+            implementation(kotlin("test"))
+
+            @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+            implementation(compose.uiTest)
+
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
+            implementation("junit:junit:4.13.2")
+
+            implementation("androidx.test:runner:1.5.2")
         }
     }
 }
@@ -135,7 +152,10 @@ android {
 }
 
 dependencies {
-    debugImplementation(libs.compose.uiTooling)
+    testImplementation(libs.androidx.core.testing)
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.1")
+    testImplementation(kotlin("test"))
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.8")
 }
 
 compose.desktop {

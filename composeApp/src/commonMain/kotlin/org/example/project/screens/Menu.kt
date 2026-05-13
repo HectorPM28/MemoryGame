@@ -16,6 +16,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -34,6 +37,7 @@ import org.example.project.theme.AzulClaro
 import org.example.project.viewModels.MemoryViewModel
 import org.jetbrains.compose.resources.painterResource
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MenuScreen(navigateToDifficulty: () -> Unit, navigateToRanking: () -> Unit, memoryViewModel: MemoryViewModel) {
     Column(modifier = Modifier.fillMaxSize().background(AzulClaro), horizontalAlignment = Alignment.CenterHorizontally,
@@ -44,30 +48,45 @@ fun MenuScreen(navigateToDifficulty: () -> Unit, navigateToRanking: () -> Unit, 
         TextField(value = memoryViewModel.user, onValueChange = { memoryViewModel.user = it })
         Spacer(Modifier.height(24.dp))
 
-        OutlinedTextField(
-            value = memoryViewModel.selectedText,
-            onValueChange = { memoryViewModel.selectedText = it },
-            enabled = false,
-            readOnly = true,
-            modifier = Modifier
-                .clickable { memoryViewModel.expanded = true }
-                .width(200.dp),
-            colors = OutlinedTextFieldDefaults.colors(disabledTextColor = Color.White, disabledContainerColor = AzulBoton,)
-        )
-        DropdownMenu(
+        ExposedDropdownMenuBox(
             expanded = memoryViewModel.expanded,
-            onDismissRequest = { memoryViewModel.expanded = false },
-            modifier = Modifier
-                .width(200.dp)
-                .border(1.dp, Color.Black, RoundedCornerShape(4.dp))
+            onExpandedChange = { memoryViewModel.expanded = !memoryViewModel.expanded }
         ) {
-            memoryViewModel.possibleImages.forEach { img ->
-                DropdownMenuItem(
-                    text = { Text(text = img) },
-                    onClick = {
-                        memoryViewModel.expanded = false
-                        memoryViewModel.selectedText = img
-                    })
+            OutlinedTextField(
+                value = memoryViewModel.selectedText,
+                onValueChange = {},
+                readOnly = true,
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = memoryViewModel.expanded)
+                },
+                modifier = Modifier
+                    .menuAnchor()
+                    .width(200.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = AzulBoton,
+                    unfocusedContainerColor = AzulBoton,
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                    focusedLabelColor = Color.Black,
+                    unfocusedLabelColor = Color.DarkGray
+                )
+            )
+
+            ExposedDropdownMenu(
+                expanded = memoryViewModel.expanded,
+                onDismissRequest = { memoryViewModel.expanded = false },
+                modifier = Modifier.background(Color.White)
+            ) {
+                memoryViewModel.possibleImages.forEach { img ->
+                    DropdownMenuItem(
+                        text = { Text(text = img) },
+                        onClick = {
+                            memoryViewModel.selectedText = img
+                            memoryViewModel.expanded = false
+                        },
+                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                    )
+                }
             }
         }
         Spacer(Modifier.height(24.dp))

@@ -5,10 +5,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import memorygame.composeapp.generated.resources.*
 import memorygame.composeapp.generated.resources.Res
 import org.example.project.model.MemoryCard
@@ -52,7 +55,9 @@ class MemoryViewModel(): ViewModel(){
     var cardsForGame = mutableListOf<MemoryCard>()
     private var _firstCard: MemoryCard? = null
     fun getListForGame(): MutableList<MemoryCard>{
-         when (difficulty){
+        this._difficultyValue.value = difficulty
+
+        when (difficulty){
             "Easy" -> {
                 points = 15
                 return createList(3)
@@ -119,6 +124,7 @@ class MemoryViewModel(): ViewModel(){
     val possibleImages = listOf("Kirbo", "CursedPokemon", "Mii" )
 
     fun getImgForGame(): List<DrawableResource>{
+        this._imageTextValue.value = selectedText
         return when (selectedText){
             "Kirbo" -> kirboImages
             "CursedPokemon" -> pokeImages
@@ -151,6 +157,10 @@ class MemoryViewModel(): ViewModel(){
         return false
     }
     fun getResultsOfRound(){
+        this._userNameValue.value = user
+        this._pointValue.value = (points - errors)
+        this._errorValue.value = errors
+
         afegirPlayer(user, errors, points-errors)
     }
 
@@ -167,7 +177,10 @@ class MemoryViewModel(): ViewModel(){
     private fun carregarPlayers() {
         viewModelScope.launch {
             try {
-                _players.value = repository.obtenirPlayers()
+                val lista = withContext(Dispatchers.Default) {
+                    repository.obtenirPlayers()
+                }
+                _players.value = lista
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -180,21 +193,44 @@ class MemoryViewModel(): ViewModel(){
             carregarPlayers()
         }
     }
-    fun canviarEstatPlayer(marker: Player?, newName: String) {
-        viewModelScope.launch {
-            marker?.id?.let { id ->
-                repository.actualitzarMarker(marker.id, newName)
-                carregarPlayers()
-            }
-        }
+
+    //Testing
+    private val _difficultyValue = MutableStateFlow("")
+    val difficultyValue: StateFlow<String> = _difficultyValue.asStateFlow()
+
+    fun setDifficultyText(newValue: String) {
+        _difficultyValue.value = newValue
+    }
+    private val _imageTextValue = MutableStateFlow("")
+    val imageTextValue: StateFlow<String> = _imageTextValue.asStateFlow()
+
+    fun setImageText(newValue: String) {
+        _imageTextValue.value = newValue
+    }
+    private val _pointValue = MutableStateFlow(0L)
+    val pointValue: StateFlow<Long> = _pointValue.asStateFlow()
+    fun setPointsLong(newValue: Long) {
+        _pointValue.value = newValue
     }
 
-    fun esborrarPlayer(marker: Player) {
-        viewModelScope.launch {
-            marker.id?.let { id ->
-                repository.esborrarMarcador(id)
-                carregarPlayers()
-            }
-        }
+    private val _errorValue = MutableStateFlow(0L)
+    val errorValue: StateFlow<Long> = _errorValue.asStateFlow()
+    fun setErrorsLong(newValue: Long) {
+        _errorValue.value = newValue
     }
+
+    private val _userNameValue = MutableStateFlow("")
+    val userNameValue: StateFlow<String> = _userNameValue.asStateFlow()
+
+    fun setUsernameText(newValue: String) {
+        _userNameValue.value = newValue
+    }
+    fun resetValues() {
+        this._difficultyValue.value = ""
+        this._pointValue.value = 0L
+        this._errorValue.value = 0L
+        this._imageTextValue.value = ""
+        this._userNameValue.value = ""
+    }
+
 }
