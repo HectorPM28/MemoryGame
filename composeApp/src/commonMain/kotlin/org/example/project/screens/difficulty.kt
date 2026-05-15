@@ -60,6 +60,6 @@ fun DifficultyScreen(navigateToGame: () -> Unit, memoryViewModel: MemoryViewMode
             { Text("Hard") }
         }
         Spacer(Modifier.height(100.dp))
-        Button(onClick = navigateToGame, colors = ButtonDefaults.buttonColors(containerColor = AzulBoton)) { Text("Start game") }
+        Button(onClick = navigateToGame, colors = ButtonDefaults.buttonColors(containerColor = AzulBoton), modifier = Modifier.testTag("start_button")) { Text("Start game") }
     }
 }

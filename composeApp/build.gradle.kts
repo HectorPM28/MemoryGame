@@ -8,7 +8,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
-    kotlin("plugin.serialization") version "1.9.0"
+    alias(libs.plugins.kotlinSerialization)
 }
 
 kotlin {
@@ -102,7 +102,8 @@ kotlin {
         }
     }
     sourceSets.commonTest.dependencies {
-        implementation(libs.kotlin.test)
+        implementation(kotlin("test"))
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
         @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
         implementation(compose.uiTest)
     }
@@ -116,7 +117,7 @@ kotlin {
             @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
             implementation(compose.uiTest)
 
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
             implementation("junit:junit:4.13.2")
 
             implementation("androidx.test:runner:1.5.2")
@@ -153,9 +154,9 @@ android {
 
 dependencies {
     testImplementation(libs.androidx.core.testing)
-    debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.1")
     testImplementation(kotlin("test"))
-    debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.8")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.1")
+    debugImplementation(libs.compose.uiTooling)
 }
 
 compose.desktop {
